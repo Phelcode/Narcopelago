@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from Options import (Choice, DefaultOnToggle, OptionGroup, PerGameCommonOptions,
-                    Range, OptionSet ,DeathLink)
+                    Range, OptionSet, Toggle, DeathLink)
 
 if TYPE_CHECKING:
     from .world import Schedule1World
@@ -245,6 +245,15 @@ class RandomizeCustomers(DefaultOnToggle):
     """
     display_name = "Randomize Customers"
 
+class RandomizeSpecialCustomers(Toggle):
+    """
+    Determines if the v0.4.7 travelling special customer groups (Hippies, Party Bus,
+    Businessmen, Bikers) will be added into the item pool.
+    Off by default: group visits run on a sleep-based countdown, so reaching them is slow.
+    Bulk deals with a visiting group are checks regardless of this option.
+    """
+    display_name = "Randomize Special Customers"
+
 class RandomizeSuppliers(DefaultOnToggle):
     """
     Determines if suppliers will be added into the item pool.
@@ -257,8 +266,8 @@ class RandomizeSuppliers(DefaultOnToggle):
 class RandomizeSewerKey(DefaultOnToggle):
     """
     Determines if the Sewer Key will be added into the item pool.
-    If enabled, Jen Herd will no longer sell sewer key.
-    Buying the sewer key from Jen Herd is a check no matter if this option is toggled on or off.
+    If enabled, Jen Heard will no longer sell sewer key.
+    Buying the sewer key from Jen Heard is a check no matter if this option is toggled on or off.
     """
     display_name = "Randomize Sewer Key"
 
@@ -320,6 +329,7 @@ class Schedule1Options(PerGameCommonOptions):
     randomize_business_properties: RandomizeBusinessProperties
     randomize_dealers: RandomizeDealers
     randomize_customers: RandomizeCustomers
+    randomize_special_customers: RandomizeSpecialCustomers
     randomize_suppliers: RandomizeSuppliers
     randomize_sewer_key: RandomizeSewerKey
     recipe_checks: RecipeChecks
@@ -394,7 +404,7 @@ option_groups = [
          NumberOfCashBundles, AmountOfCashPerBundleMin, AmountOfCashPerBundleMax,  
          BanBadFillerItems, BanProgressionSkipItems, TrapChance,  
          RandomizeLevelUnlocks, RandomizeCartelInfluence, CartelInfluenceItemsPerRegion,   
-         RandomizeCustomers, RandomizeDealers, RandomizeSuppliers, RandomizeSewerKey,
+         RandomizeCustomers, RandomizeSpecialCustomers, RandomizeDealers, RandomizeSuppliers, RandomizeSewerKey,
          RandomizeDrugMakingProperties, RandomizeBusinessProperties,  
          RecipeChecks, CashForTrash, 
          DeathLink, DeathLinkOptions],
@@ -422,6 +432,7 @@ option_presets = {
         "randomize_business_properties": True,
         "randomize_dealers": True,
         "randomize_customers": True,
+        "randomize_special_customers": RandomizeSpecialCustomers.default,
         "cartel_influence_items_per_region": CartelInfluenceItemsPerRegion.default,
         "recipe_checks": RecipeChecks.default,
         "cash_for_trash": CashForTrash.default,

@@ -158,15 +158,19 @@ def create_all_items(world: Schedule1World, data) -> None:
 
     if world.options.randomize_dealers:
         itempool += [world.create_item(item.name) for item in data.items.values() 
-                     if "Dealer" in item.tags and "Default" not in item.tags]
+                     if "Dealer" in item.tags and "default" not in item.tags]
 
     if world.options.randomize_customers:
         itempool += [world.create_item(item.name) for item in data.items.values() 
-                     if "Customer" in item.tags and "Default" not in item.tags]
+                     if "Customer" in item.tags and "default" not in item.tags]
+
+    if world.options.randomize_special_customers:
+        itempool += [world.create_item(item.name) for item in data.items.values() 
+                     if "Special Customer" in item.tags]
         
     if world.options.randomize_suppliers:
         itempool += [world.create_item(item.name) for item in data.items.values() 
-                     if "Supplier" in item.tags and "Default" not in item.tags]
+                     if "Supplier" in item.tags and "default" not in item.tags]
 
     if world.options.randomize_sewer_key:
         itempool += [world.create_item(item.name) for item in data.items.values() 

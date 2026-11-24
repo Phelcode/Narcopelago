@@ -102,6 +102,7 @@ class Schedule1World(World):
             "randomize_business_properties",
             "randomize_dealers",
             "randomize_customers",
+            "randomize_special_customers",
             "randomize_suppliers",
             "cartel_influence_items_per_region",
             "recipe_checks",

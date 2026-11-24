@@ -11,14 +11,15 @@ config file.
  - Sends and receives all customer checks and items.
  - Customers can be unlocked by receiving them through archipelago when randomize_customers is true in the YAML.
  - checks for samples will be sent no matter the settings and are functional.
+ - The v0.4.7 special customer groups (Hippies, Party Bus, Businessmen, Bikers) can be added to the item pool with randomize_special_customers. It is off by default because group visits run on a sleep-based countdown and are slow to reach. Bulk deals with a visiting group are checks either way.
  - Dealers will send checks when recruiting regardless of settings.
  - Dealer AP unlock will allow user to then recruit them in game. Check is still possible when having them as a possible contact.
  - Suppliers will not be unlockable if suppliers are randomized and only unlocked through ap items
  - Suppliers give checks for unlocking them when suppliers are not randomized
  - Every Action that would cause cartel influence in a region to drop is a check (x7 per region)
  - Unable to reduce cartel influence naturally and cartel influence items added to pool when randomize_cartel_influence is true
- - Level up rewards are suppressed when randomize_level_up_rewards is true
- - Level up rewards are added to the item pool when randomize_level_up_rewards is true
+ - Level up rewards are suppressed when randomize_level_unlocks is true
+ - Level up rewards are added to the item pool when randomize_level_unlocks is true
  - Whenever you'd nomrally get unlocks for leveling up, you get a check regardless of the option
  - Deathlink is sent when a player dies or when they arrested. Recieved deathlink causes player to get arrested
  - Property and busniesses give checks when purchased
