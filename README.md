@@ -1,5 +1,50 @@
 # Schedule 1 Archipelago Randomizer Setup Guide
 
+## Building the .apworld from source (Windows PowerShell)
+
+A `.apworld` is just a zip of `worlds/Schedule_I`. Archipelago's launcher validates it before installing
+(`worlds/LauncherComponents.py` in the Archipelago repo): the zip root must contain exactly **one directory**,
+that directory's name must appear in the **file name** (case-sensitive), entries must use forward slashes,
+and `schedule_I/__init__.py` must exist. That is why the file is named `schedule_I.apworld` and the root
+folder inside is `schedule_I` (first letter lowercased from `Schedule_I`).
+
+Run this from the repo root (the folder that contains `worlds\`), with Windows PowerShell 5.1+ or PowerShell 7:
+
+```powershell
+$ErrorActionPreference = 'Stop'
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+$src = Join-Path (Get-Location) 'worlds\Schedule_I'
+$out = Join-Path (Get-Location) 'schedule_I.apworld'
+if (Test-Path $out) { Remove-Item $out -Force }
+
+$zip = [System.IO.Compression.ZipFile]::Open($out, [System.IO.Compression.ZipArchiveMode]::Create)
+try {
+    $prefix = $src.Length + 1
+    Get-ChildItem -Path $src -Recurse -File -Force | ForEach-Object {
+        if ($_.FullName -match '__pycache__') { return }
+        if ($_.Extension -in '.pyc', '.pyd', '.so', '.dll') { return }
+        # root entry is exactly one directory named schedule_I, forward slashes, name contained in the file stem
+        $entryName = 'schedule_I/' + $_.FullName.Substring($prefix).Replace('\', '/')
+        $entry = $zip.CreateEntry($entryName, [System.IO.Compression.CompressionLevel]::Optimal)
+        $stream = $entry.Open()
+        try {
+            $file = [System.IO.File]::OpenRead($_.FullName)
+            try { $file.CopyTo($stream) } finally { $file.Dispose() }
+        } finally { $stream.Dispose() }
+    }
+} finally {
+    $zip.Dispose()
+}
+
+# optional sanity check, mirrors the launcher's validation (python ships with Archipelago):
+python -c "import zipfile,pathlib; p='schedule_I.apworld'; z=zipfile.ZipFile(p); d=[f.name for f in zipfile.Path(z).iterdir() if f.is_dir()]; s=pathlib.Path(p).stem; assert len(d)==1 and d[0] in s, d; z.open(d[0]+'/__init__.py'); print('OK:', s, d)"
+```
+
+Do not use `Compress-Archive worlds\Schedule_I\*` for this — the `\*` flattens the root folder, and some zip
+tools write `\` path separators, both of which fail the launcher's check. Install the result with the
+Archipelago launcher's "Install APWorld" button, or attach it to a GitHub release as `schedule_I.apworld`.
+
 ## Required Software
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases/latest)
