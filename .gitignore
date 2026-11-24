@@ -8,6 +8,11 @@
 !/worlds/Schedule_I/
 !readme.md
 !build-apworld.ps1
+!build_apworld.py
+!schedule_I.apworld
+!/.github/
+!/.github/workflows/
+!/.github/workflows/build-apworld.yml
 
 # Ignore common artifacts inside tracked folders
 __pycache__/

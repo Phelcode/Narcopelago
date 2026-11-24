@@ -1,0 +1,49 @@
+name: build-apworld
+
+# Rebuilds the committed schedule_I.apworld whenever the world source changes.
+# The bot commit only touches schedule_I.apworld, which is not in the paths filter,
+# and carries [skip ci], so this workflow does not retrigger itself.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "worlds/**"
+      - "build_apworld.py"
+      - "build-apworld.ps1"
+      - ".github/workflows/build-apworld.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build and validate schedule_I.apworld
+        run: python build_apworld.py
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: schedule_I.apworld
+          path: schedule_I.apworld
+          retention-days: 30
+
+      - name: Commit rebuilt apworld to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add schedule_I.apworld
+          if git diff --cached --quiet; then
+            echo "schedule_I.apworld already up to date"
+          else
+            git commit -m "chore: rebuild schedule_I.apworld [skip ci]"
+            git push
+          fi
