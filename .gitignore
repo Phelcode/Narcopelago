@@ -7,6 +7,7 @@
 /worlds/*
 !/worlds/Schedule_I/
 !readme.md
+!build-apworld.ps1
 
 # Ignore common artifacts inside tracked folders
 __pycache__/
